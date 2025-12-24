@@ -9,9 +9,26 @@ import cors from "cors";
 const app = express();
 const PORT = 3000;
 
-app.use(cors({
-  origin: "http://localhost:5173",
-}));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ai-support-chat-gilt.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (like curl, mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use("/chat", chatRoutes);
 

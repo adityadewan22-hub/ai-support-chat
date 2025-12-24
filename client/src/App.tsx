@@ -18,11 +18,14 @@ export default function App() {
     setLoading(true);
     setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     try {
-      const res = await fetch("http://localhost:3000/chat/message", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage, sessionId }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/chat/message`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userMessage, sessionId }),
+        }
+      );
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Something went wrong");
